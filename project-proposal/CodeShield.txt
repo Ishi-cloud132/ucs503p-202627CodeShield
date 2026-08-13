@@ -1,0 +1,681 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=0.8in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{array}
+
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+\begin{document}
+
+% ---------------------------------------------------------
+% TITLE
+% ---------------------------------------------------------
+
+\begin{center}
+
+{\Large\bfseries
+CodeShield: ML-Based Code Vulnerability Detection\\
+and Risk Assessment Platform
+}
+
+\vspace{0.4cm}
+
+{\large
+\textbf{Project Proposal for UCS503}
+}
+
+\vspace{0.15cm}
+
+Submitted to:
+
+\vspace{0.05cm}
+
+\textbf{Ms. Paramveer Kaur}
+
+\vspace{0.05cm}
+
+\textbf{Thapar Institute of Engineering and Technology}
+
+\vspace{0.45cm}
+
+\begin{tabular}{ccc}
+
+\begin{minipage}{0.29\textwidth}
+\centering
+\textbf{Rhea Balamurugan}\\
+Roll No.: \texttt{1024030152}\\
+\texttt{rbalamurugan\_be24@thapar.edu}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.29\textwidth}
+\centering
+\textbf{Ishi Govil}\\
+Roll No.: \texttt{1024030161}\\
+\texttt{igovil\_be24@thapar.edu}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.29\textwidth}
+\centering
+\textbf{Shreya Kush}\\
+Roll No.: \texttt{1024030718}\\
+\texttt{skush\_be24@thapar.edu}
+\end{minipage}
+
+\end{tabular}
+
+\end{center}
+
+\vspace{0.25cm}
+
+
+% ---------------------------------------------------------
+% 1. HIGHER-ORDER GOAL
+% ---------------------------------------------------------
+
+\section{Higher-order Goal}
+
+CodeShield aims to improve software security by automatically identifying potential vulnerabilities in source code before it is deployed. The engineering objective is to build a deployable platform that combines static code analysis with machine learning to detect, classify, and prioritize security vulnerabilities, giving developers a fast and reliable way to catch risky code early in the development cycle.
+
+
+% ---------------------------------------------------------
+% 2. PROBLEM STATEMENT
+% ---------------------------------------------------------
+
+\section{Problem Statement}
+
+Modern software projects contain thousands of lines of code, which makes manual security inspection difficult, time-consuming, and error-prone. CodeShield is motivated by the following recurring challenges:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item \textbf{Large codebases:} Manually reviewing every line of a real-world project is impractical.
+
+    \item \textbf{Hidden vulnerabilities:} Security issues may not produce visible errors during normal execution, so they go unnoticed until exploited.
+
+    \item \textbf{Late detection:} Vulnerabilities discovered after deployment are significantly more expensive and disruptive to fix.
+
+    \item \textbf{Different vulnerability types:} SQL injection, command injection, hardcoded credentials, and insecure input handling each require different detection strategies.
+
+    \item \textbf{Prioritization:} Developers need to know which of the detected vulnerabilities are the most critical to fix first.
+
+\end{itemize}
+
+There is therefore a need for an automated system that can analyze source code and provide developers with the vulnerability type, its location, its severity, and actionable security guidance.
+
+
+% ---------------------------------------------------------
+% 3. PROPOSED SOLUTION
+% ---------------------------------------------------------
+
+\section{Proposed Solution}
+
+We propose CodeShield, an ML-driven code vulnerability detection platform that accepts source code or a connected repository, analyzes it using a combination of static code analysis and machine-learning techniques, and generates a structured security report.
+
+The main components are:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item \textbf{Code submission:} Upload individual source files or connect a Git repository.
+
+    \item \textbf{Code preprocessing:} Parse and normalize source code into an analyzable form.
+
+    \item \textbf{Static analysis:} Identify suspicious coding patterns and program structures using rule-based checks.
+
+    \item \textbf{ML-based detection:} Classify potentially vulnerable code using trained models.
+
+    \item \textbf{Risk assessment:} Assign a severity and confidence score to every detected vulnerability.
+
+    \item \textbf{Security report:} Present the vulnerability type, its exact location, and a plain-language explanation.
+
+    \item \textbf{Dashboard:} Let developers view scan history, trends, and outstanding issues over time.
+
+\end{itemize}
+
+
+% ---------------------------------------------------------
+% 4. CORE WORKFLOW
+% ---------------------------------------------------------
+
+\section{Core Workflow}
+
+Figure 1 shows the primary scan pipeline: submitted code passes through preprocessing and structural analysis, is evaluated by rule-based and ML-based engines, and is then merged into a single risk assessment that drives the final report and dashboard.
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[
+    node distance=8mm and 8mm,
+    box/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=black,
+        thick,
+        minimum width=2.3cm,
+        minimum height=0.75cm,
+        align=center,
+        font=\small
+    },
+    arrow/.style={
+        -{Stealth[length=2mm]},
+        thick
+    }
+]
+
+\node[box] (input) {Code\\Submission};
+
+\node[box, right=of input] (preprocess)
+    {Preprocessing\\and AST};
+
+\node[box, right=of preprocess] (analysis)
+    {Static + ML\\Analysis};
+
+\node[box, right=of analysis] (risk)
+    {Risk\\Assessment};
+
+\node[box, right=of risk] (report)
+    {Security\\Report};
+
+\node[box, below=12mm of report] (dashboard)
+    {Developer\\Dashboard};
+
+\draw[arrow] (input) -- (preprocess);
+\draw[arrow] (preprocess) -- (analysis);
+\draw[arrow] (analysis) -- (risk);
+\draw[arrow] (risk) -- (report);
+\draw[arrow] (report) -- (dashboard);
+
+\end{tikzpicture}
+
+\caption{CodeShield core scanning workflow from code submission to the developer-facing dashboard.}
+\label{fig:core-workflow}
+
+\end{figure}
+
+
+\subsection{Worked Example}
+
+Suppose the submitted code contains the following line:
+
+\begin{verbatim}
+query = "SELECT * FROM users WHERE id=" + user_id
+\end{verbatim}
+
+CodeShield would report this as:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item \textbf{Vulnerability:} SQL Injection -- High Severity
+
+    \item \textbf{Location:} database.py, Line 12
+
+    \item \textbf{Reason:} User-controlled input is directly concatenated into an SQL query without sanitization or parameterization.
+
+\end{itemize}
+
+
+% ---------------------------------------------------------
+% 5. SOLUTION APPROACH
+% ---------------------------------------------------------
+
+\section{Solution Approach}
+
+\subsection{Code Preprocessing}
+
+Submitted source code is first processed and converted into a representation suitable for analysis. Depending on the programming language, the system uses Abstract Syntax Trees (ASTs) or other code-parsing techniques to understand structures such as:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item Function calls
+
+    \item Variable declarations and usage
+
+    \item Control flow
+
+    \item Imports and dependencies
+
+    \item User inputs
+
+    \item Database operations
+
+\end{itemize}
+
+
+\subsection{Static Analysis}
+
+The system identifies known suspicious patterns using predefined security rules, forming a deterministic layer that does not rely entirely on machine learning.
+
+For example, a rule may check whether user-controlled input is directly passed into a system command, which could indicate a potential command injection vulnerability.
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[
+    node distance=7mm,
+    box/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=black,
+        thick,
+        minimum width=3.0cm,
+        minimum height=0.7cm,
+        align=center,
+        font=\small
+    },
+    arrow/.style={
+        -{Stealth[length=2mm]},
+        thick
+    }
+]
+
+\node[box] (input) {User Input};
+\node[box, below=of input] (command) {System Command};
+\node[box, below=of command] (warning) {Potential Command\\Injection};
+
+\draw[arrow] (input) -- (command);
+\draw[arrow] (command) -- (warning);
+
+\end{tikzpicture}
+
+\caption{Example of a rule-based static analysis check.}
+
+\end{figure}
+
+
+\subsection{ML-Based Vulnerability Detection}
+
+A machine-learning component analyzes code representations and classifies potentially vulnerable code into a defined set of supported vulnerability categories, rather than claiming to detect every possible vulnerability.
+
+The initial supported categories are:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item SQL Injection
+
+    \item Command Injection
+
+    \item Hardcoded Credentials
+
+    \item Insecure File Handling
+
+    \item Cross-Site Scripting
+
+    \item Weak Authentication
+
+\end{itemize}
+
+Framing the scope as ``selected vulnerability categories'' keeps the platform's claims realistic and measurable rather than promising exhaustive coverage.
+
+
+\subsection{Risk Assessment}
+
+Every detected issue is assigned:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item Vulnerability type
+
+    \item Severity
+
+    \item Confidence score
+
+    \item Affected file and line number
+
+    \item Explanation
+
+\end{itemize}
+
+The platform then prioritizes the most critical vulnerabilities so developers know what to fix first.
+
+
+% ---------------------------------------------------------
+% 6. SYSTEM ARCHITECTURE
+% ---------------------------------------------------------
+
+\section{System Architecture}
+
+Figure 2 presents the end-to-end architecture, from the developer-facing frontend through the analysis pipeline to persistent storage and reporting.
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[
+    node distance=8mm and 9mm,
+    box/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=black,
+        thick,
+        minimum width=2.6cm,
+        minimum height=0.75cm,
+        align=center,
+        font=\small
+    },
+    database/.style={
+        cylinder,
+        draw=black,
+        thick,
+        shape border rotate=90,
+        aspect=0.25,
+        minimum width=2.3cm,
+        minimum height=0.8cm,
+        align=center,
+        font=\small
+    },
+    arrow/.style={
+        -{Stealth[length=2mm]},
+        thick
+    }
+]
+
+\node[box] (frontend) {React\\Frontend};
+
+\node[box, right=of frontend] (backend)
+    {FastAPI\\Backend};
+
+\node[box, right=of backend] (analysis)
+    {Analysis\\Pipeline};
+
+\node[box, right=of analysis] (report)
+    {Report \&\\Dashboard};
+
+\node[database, below=12mm of analysis] (db)
+    {PostgreSQL};
+
+\draw[arrow] (frontend) -- (backend);
+\draw[arrow] (backend) -- (analysis);
+\draw[arrow] (analysis) -- (report);
+\draw[arrow] (analysis) -- (db);
+
+\end{tikzpicture}
+
+\caption{CodeShield system architecture combining a React frontend, FastAPI backend, analysis pipeline, and PostgreSQL database.}
+\label{fig:architecture}
+
+\end{figure}
+
+
+% ---------------------------------------------------------
+% 7. TECHNOLOGY STACK
+% ---------------------------------------------------------
+
+\section{Technology Stack}
+
+\begin{center}
+\begin{tabular}{|p{0.27\textwidth}|p{0.63\textwidth}|}
+\hline
+\textbf{Layer} & \textbf{Technologies} \\
+\hline
+
+Frontend &
+React.js, HTML/CSS, JavaScript
+\\
+\hline
+
+Backend &
+Python, FastAPI
+\\
+\hline
+
+Machine Learning &
+Python, scikit-learn / PyTorch, code embeddings, classification and anomaly-detection techniques
+\\
+\hline
+
+Code Analysis &
+Python AST; Tree-sitter for multi-language support
+\\
+\hline
+
+Database &
+PostgreSQL
+\\
+\hline
+
+Optional / Future Extensions &
+Redis for caching and background processing, Docker for isolated scanning environments, GitHub API for repository scanning, and Celery/RQ for asynchronous analysis
+\\
+\hline
+
+\end{tabular}
+\end{center}
+
+Optional components are presented as possible future extensions rather than commitments for the initial release.
+
+
+% ---------------------------------------------------------
+% 8. DEVELOPMENT AND CI/CD PIPELINE
+% ---------------------------------------------------------
+
+\section{Development and CI/CD Pipeline}
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item \textbf{Continuous Integration (CI):} Automatically installs dependencies, runs unit tests, performs code-quality checks, and validates the application whenever new code is pushed to the project repository.
+
+    \item \textbf{Continuous Delivery/Deployment (CD):} After successful checks, the application is built and prepared for deployment to the target environment.
+
+    \item \textbf{Workflow:} Code Push $\rightarrow$ CI Checks $\rightarrow$ Tests $\rightarrow$ Build $\rightarrow$ CD $\rightarrow$ Deployment.
+
+    \item The pipeline ensures that only tested and validated code is integrated and deployed.
+
+\end{itemize}
+
+
+% ---------------------------------------------------------
+% 9. EVALUATION CRITERIA
+% ---------------------------------------------------------
+
+\section{Evaluation Criteria}
+
+CodeShield defines measurable evaluation criteria rather than relying on a general claim of accuracy.
+
+\subsection{ML Evaluation}
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item Precision
+
+    \item Recall
+
+    \item F1-score
+
+    \item Accuracy
+
+\end{itemize}
+
+Precision and recall are treated as the most important metrics, since both false alarms and missed vulnerabilities carry real cost.
+
+\subsection{System Evaluation}
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item Average code scanning time
+
+    \item Number of files successfully analyzed
+
+    \item Detection coverage for supported vulnerability categories
+
+    \item API response time
+
+    \item Successful scan completion rate
+
+\end{itemize}
+
+
+% ---------------------------------------------------------
+% 10. SCALABILITY
+% ---------------------------------------------------------
+
+\section{Scalability}
+
+The code-analysis pipeline is designed to be separated from the API layer, so multiple scans can be processed without blocking normal API requests.
+
+\begin{figure}[H]
+\centering
+
+\begin{tikzpicture}[
+    node distance=8mm and 10mm,
+    box/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=black,
+        thick,
+        minimum width=2.7cm,
+        minimum height=0.75cm,
+        align=center,
+        font=\small
+    },
+    arrow/.style={
+        -{Stealth[length=2mm]},
+        thick
+    }
+]
+
+\node[box] (request) {Incoming\\Request};
+
+\node[box, right=of request] (queue)
+    {Scan\\Queue};
+
+\node[box, right=of queue] (worker)
+    {Analysis\\Worker};
+
+\node[box, right=of worker] (result)
+    {Scan\\Result};
+
+\draw[arrow] (request) -- (queue);
+\draw[arrow] (queue) -- (worker);
+\draw[arrow] (worker) -- (result);
+
+\end{tikzpicture}
+
+\caption{Decoupled scanning pipeline using queued analysis workers.}
+
+\end{figure}
+
+The system is also designed to grow in language coverage, starting from Python only and extending to Python, JavaScript, Java, and C/C++ using language-specific parsers.
+
+
+% ---------------------------------------------------------
+% 11. INITIAL DELIVERABLES
+% ---------------------------------------------------------
+
+\section{Initial Deliverables}
+
+The first iteration keeps the scope realistic and measurable:
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item User / code submission interface
+
+    \item FastAPI backend
+
+    \item Python source-code parser
+
+    \item Static vulnerability rules
+
+    \item Initial ML vulnerability classifier
+
+    \item PostgreSQL database
+
+    \item Vulnerability report
+
+    \item Basic security dashboard
+
+    \item Unit testing and CI/CD pipeline
+
+\end{itemize}
+
+
+\subsection{Subsequent Deliverables}
+
+\begin{itemize}[leftmargin=0.6cm]
+
+    \item GitHub repository scanning
+
+    \item Support for additional programming languages
+
+    \item Improved ML model
+
+    \item Severity prioritization
+
+    \item Code-level remediation suggestions
+
+    \item Scan history and comparison
+
+    \item Background / asynchronous scanning
+
+    \item Docker-based isolated analysis
+
+\end{itemize}
+
+
+% ---------------------------------------------------------
+% 12. RISKS AND MITIGATION
+% ---------------------------------------------------------
+
+\section{Risks and Mitigation}
+
+\begin{center}
+\begin{tabular}{|p{0.38\textwidth}|p{0.52\textwidth}|}
+\hline
+\textbf{Risk} & \textbf{Mitigation} \\
+\hline
+
+False positives -- the system may flag safe code as vulnerable &
+Combine ML predictions with static-analysis rules and report a confidence score rather than automatically declaring code unsafe.
+\\
+\hline
+
+False negatives -- some vulnerabilities may be missed &
+Clearly define supported vulnerability categories and evaluate performance using recall.
+\\
+\hline
+
+Dataset limitations -- labelled vulnerable code can be hard to obtain &
+Start with a limited set of vulnerability classes and use validated datasets and examples.
+\\
+\hline
+
+Programming language differences -- security patterns vary by language &
+Initially support one or two languages rather than claiming universal coverage.
+\\
+\hline
+
+Security of uploaded code -- source code may contain confidential information &
+Minimize storage, restrict access, and process uploaded code in isolated environments.
+\\
+\hline
+
+\end{tabular}
+\end{center}
+
+
+% ---------------------------------------------------------
+% 13. SUMMARY
+% ---------------------------------------------------------
+
+\section{Summary}
+
+CodeShield is a software-security platform that combines static code analysis and machine learning to automatically identify selected vulnerabilities in source code. The system analyzes submitted code, classifies potential security issues, estimates their severity, and presents developers with an actionable, prioritized security report through a web-based dashboard.
+
+The project also incorporates a CI/CD pipeline to automate testing, validation, and deployment of the platform, helping the development team maintain a stable and reliable application.
+
+\end{document}
