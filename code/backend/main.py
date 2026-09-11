@@ -16,6 +16,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
         "http://localhost:5173",
         "http://127.0.0.1:5173"
     ],
@@ -49,16 +51,45 @@ def scan_code(data: dict):
         return {
             "success": False,
             "message": "No code provided",
-            "issues": []
+            "total_vulnerabilities": 0,
+            "vulnerabilities": []
         }
 
     issues = analyze_code(code)
+
+    vulnerabilities = []
+
+    for issue in issues:
+        severity = issue.get("severity", "LOW")
+
+        risk_scores = {
+            "HIGH": 9,
+            "MEDIUM": 6,
+            "LOW": 3
+        }
+
+        vulnerabilities.append({
+            "type": issue.get("type", "Unknown"),
+            "severity": severity,
+            "line": issue.get("line", 1),
+            "confidence": issue.get("confidence", 0) / 100,
+            "risk_score": risk_scores.get(severity, 3),
+            "description": issue.get(
+                "description",
+                "Potential security vulnerability detected."
+            ),
+            "recommendation": issue.get(
+                "recommendation",
+                "Review and fix the identified security issue."
+            )
+        })
 
     overall_risk = calculate_overall_risk(issues)
 
     return {
         "success": True,
-        "total_issues": len(issues),
+        "total_vulnerabilities": len(vulnerabilities),
+        "vulnerabilities": vulnerabilities,
         "overall_risk": overall_risk,
-        "issues": issues
+        "source": "backend"
     }
