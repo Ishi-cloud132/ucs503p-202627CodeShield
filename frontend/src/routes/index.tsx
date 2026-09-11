@@ -4,7 +4,10 @@ import { TopNav } from "@/components/codeshield/TopNav";
 import { CodeEditor } from "@/components/codeshield/CodeEditor";
 import { ScanSummary, SCAN_STEPS } from "@/components/codeshield/ScanSummary";
 import { VulnerabilityResults } from "@/components/codeshield/VulnerabilityResults";
-import { Dashboard } from "@/components/codeshield/Dashboard";
+import {
+  Dashboard,
+  type ScanRecord,
+} from "@/components/codeshield/Dashboard";
 import { scanCode, type ScanResponse } from "@/lib/scan-api";
 import { VULNERABLE_SAMPLE } from "@/lib/sample-code";
 
@@ -37,8 +40,21 @@ function Index() {
   const [activeStep, setActiveStep] = useState(0);
   const [elapsed, setElapsed] = useState<string | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const [scanHistory, setScanHistory] = useState<ScanRecord[]>([]);
 
-  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+ useEffect(() => {
+  const savedScans = localStorage.getItem("codeshield_scan_history");
+
+  if (savedScans) {
+    try {
+      setScanHistory(JSON.parse(savedScans));
+    } catch {
+      localStorage.removeItem("codeshield_scan_history");
+    }
+  }
+
+  return () => timers.current.forEach(clearTimeout);
+}, []);
 
   const handleScan = async () => {
     if (isScanning) return;
@@ -58,9 +74,41 @@ function Index() {
       new Promise((resolve) => timers.current.push(setTimeout(resolve, 1600))),
     ]);
 
-    setElapsed(`${((performance.now() - started) / 1000).toFixed(1)}s`);
-    setResult(response);
-    setIsScanning(false);
+    const scanDuration = Number(
+  ((performance.now() - started) / 1000).toFixed(1)
+);
+
+setElapsed(`${scanDuration}s`);
+setResult(response);
+
+const vulnerabilities = response.vulnerabilities;
+
+let highestSeverity: "HIGH" | "MEDIUM" | "LOW" = "LOW";
+
+if (vulnerabilities.some((v) => v.severity === "HIGH")) {
+  highestSeverity = "HIGH";
+} else if (vulnerabilities.some((v) => v.severity === "MEDIUM")) {
+  highestSeverity = "MEDIUM";
+}
+
+const newScan: ScanRecord = {
+  id: `Python Code Scan #${scanHistory.length + 1}`,
+  date: new Date().toLocaleString(),
+  issues: response.total_vulnerabilities,
+  severity: highestSeverity,
+  duration: scanDuration,
+};
+
+const updatedHistory = [newScan, ...scanHistory];
+
+setScanHistory(updatedHistory);
+
+localStorage.setItem(
+  "codeshield_scan_history",
+  JSON.stringify(updatedHistory)
+);
+
+setIsScanning(false);
   };
 
   const flaggedLines = result ? result.vulnerabilities.map((v) => v.line) : [];
@@ -105,7 +153,7 @@ function Index() {
           hasScanned={Boolean(result)}
         />
 
-        <Dashboard />
+        <Dashboard scans={scanHistory} />
       </main>
 
       <footer className="border-t border-border">
