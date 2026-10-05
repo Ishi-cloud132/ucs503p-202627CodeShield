@@ -1,0 +1,4 @@
+{
+  "status": "not_trained",
+  "message": "Run scripts/train_codeshield_ml.py to create the model and metrics."
+}
