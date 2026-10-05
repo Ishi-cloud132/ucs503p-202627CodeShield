@@ -1,0 +1,2020 @@
+id,code,label,cwe,source
+159,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00841', methods=['GET'])
+	def BenchmarkTest00841_get():
+		return BenchmarkTest00841_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00841', methods=['POST'])
+	def BenchmarkTest00841_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		
+		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = wrapped.get_query_parameter(""BenchmarkTest00841"")
+		if not param:
+			param = """"
+
+		bar = """"
+		if param:
+			lst = []
+			lst.append('safe')
+			lst.append(param)
+			lst.append('moresafe')
+			lst.pop(0)
+			bar = lst[0]
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			'bar is \'{0}\' and otherarg is \'{1}\''.format(bar, otherarg)
+		)
+
+		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+346,"offset = request.args.get('offset', 0)
+cursor.execute(""SELECT * FROM comments LIMIT 10 OFFSET "" + offset)",SQL Injection,CWE-89,Python_Vulnerability_Remediation
+24,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00097', methods=['GET'])
+	def BenchmarkTest00097_get():
+		return BenchmarkTest00097_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00097', methods=['POST'])
+	def BenchmarkTest00097_post():
+		RESPONSE = """"
+
+		param = request.form.get(""BenchmarkTest00097"")
+		if not param:
+			param = """"
+
+		bar = ''
+		if param:
+			bar = param.split(' ')[0]
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			f'bar is \'{bar}\' and otherarg is \'{otherarg}\''
+		)
+
+		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+389,"import os
+import glob
+
+def find_files():
+    pattern = input(""Enter file pattern (e.g., *.txt): "")
+    # Use Python's glob instead of shell find command
+    files = glob.glob(pattern, recursive=True)
+    for file in files:
+        print(file)
+
+find_files()",Command Injection,CWE-78,Python_Vulnerability_Remediation
+327,"import os
+def execute_command(user_input):
+    command = ""ls "" + user_input
+    os.system(command)
+
+user_input = input(""Enter your command: "")
+execute_command(user_input)",Command Injection,CWE-78,Python_Vulnerability_Remediation
+158,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00840', methods=['GET'])
+	def BenchmarkTest00840_get():
+		return BenchmarkTest00840_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00840', methods=['POST'])
+	def BenchmarkTest00840_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		
+		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = wrapped.get_query_parameter(""BenchmarkTest00840"")
+		if not param:
+			param = """"
+
+		map52374 = {}
+		map52374['keyA-52374'] = 'a-Value'
+		map52374['keyB-52374'] = param
+		map52374['keyC'] = 'another-Value'
+		bar = ""safe!""
+		bar = map52374['keyB-52374']
+		bar = map52374['keyA-52374']
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			'bar is \'{0}\' and otherarg is \'{1}\''.format(bar, otherarg)
+		)
+
+		return RESPONSE",SAFE,CWE-79,OWASP
+18,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00090', methods=['GET'])
+	def BenchmarkTest00090_get():
+		return BenchmarkTest00090_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00090', methods=['POST'])
+	def BenchmarkTest00090_post():
+		RESPONSE = """"
+
+		param = request.form.get(""BenchmarkTest00090"")
+		if not param:
+			param = """"
+
+		bar = ""alsosafe""
+		if param:
+			lst = []
+			lst.append('safe')
+			lst.append(param)
+			lst.append('moresafe')
+			lst.pop(0)
+			bar = lst[1]
+
+		import pathlib
+		import code.backend.data.raw.owasp.helpers.utils
+
+		testfiles = pathlib.Path(code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR)
+		p = (testfiles / bar).resolve()
+
+		if not str(p).startswith(str(testfiles)):
+			RESPONSE += (
+				""Invalid Path.""
+			)
+			return RESPONSE
+		
+		if p.exists():
+			RESPONSE += ( f""File \'{escape_for_html(str(p))}\' exists."" )
+		else:
+			RESPONSE += ( f""File \'{escape_for_html(str(p))}\' does not exist."" )
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+4,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00004', methods=['GET'])
+	def BenchmarkTest00004_get():
+		response = make_response(render_template('web/pathtraver-00/BenchmarkTest00004.html'))
+		response.set_cookie('BenchmarkTest00004', 'Filename',
+			max_age=60*3,
+			secure=True,
+			path=request.path,
+			domain='localhost')
+		return response
+		return BenchmarkTest00004_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00004', methods=['POST'])
+	def BenchmarkTest00004_post():
+		RESPONSE = """"
+
+		import urllib.parse
+		param = urllib.parse.unquote_plus(request.cookies.get(""BenchmarkTest00004"", ""noCookieValueSupplied""))
+
+		num = 106
+		
+		bar = ""This_should_always_happen"" if 7 * 18 + num > 200 else param
+
+		import codecs
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			fileTarget = codecs.open(f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}','r','utf-8')
+
+			RESPONSE += (
+				f""Access to file: \'{escape_for_html(fileTarget.name)}\' created.""
+			)
+
+			RESPONSE += (
+				"" And file already exists.""
+			)
+
+		except FileNotFoundError:
+			RESPONSE += (
+				"" But file doesn't exist yet.""
+			)
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+27,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/sqli-00/BenchmarkTest00100', methods=['GET'])
+	def BenchmarkTest00100_get():
+		return BenchmarkTest00100_post()
+
+	@app.route('/benchmark/sqli-00/BenchmarkTest00100', methods=['POST'])
+	def BenchmarkTest00100_post():
+		RESPONSE = """"
+
+		param = request.form.get(""BenchmarkTest00100"")
+		if not param:
+			param = """"
+
+		map87 = {}
+		map87['keyA-87'] = 'a-Value'
+		map87['keyB-87'] = param
+		map87['keyC'] = 'another-Value'
+		bar = ""safe!""
+		bar = map87['keyB-87']
+		bar = map87['keyA-87']
+
+		import code.backend.data.raw.owasp.helpers.db_sqlite
+
+		sql = f'SELECT username from USERS where password = ?'
+		con = code.backend.data.raw.owasp.helpers.db_sqlite.get_connection()
+		cur = con.cursor()
+		cur.execute(sql, (bar,))
+		RESPONSE += (
+			code.backend.data.raw.owasp.helpers.db_sqlite.results(cur, sql)
+		)
+		con.close()
+
+		return RESPONSE",SAFE,CWE-89,OWASP
+135,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00671', methods=['GET'])
+	def BenchmarkTest00671_get():
+		return BenchmarkTest00671_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00671', methods=['POST'])
+	def BenchmarkTest00671_post():
+		RESPONSE = """"
+
+		param = request.args.get(""BenchmarkTest00671"")
+		if not param:
+			param = """"
+
+		import configparser
+		
+		bar = 'safe!'
+		conf39424 = configparser.ConfigParser()
+		conf39424.add_section('section39424')
+		conf39424.set('section39424', 'keyA-39424', 'a_Value')
+		conf39424.set('section39424', 'keyB-39424', param)
+		bar = conf39424.get('section39424', 'keyA-39424')
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			'bar is \'%s\' and otherarg is \'%s\'' % (bar, otherarg)
+		)
+
+		return RESPONSE",SAFE,CWE-79,OWASP
+363,"from flask import Flask, request
+app = Flask(__name__)
+
+@app.route('/echo', methods=['POST'])
+def echo():
+    data = request.form['data']
+    return f""Echo: {data}""
+
+if __name__ == '__main__':
+    app.run(port=8000)",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
+171,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01009', methods=['GET'])
+	def BenchmarkTest01009_get():
+		return BenchmarkTest01009_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01009', methods=['POST'])
+	def BenchmarkTest01009_post():
+		RESPONSE = """"
+
+		parts = request.path.split(""/"")
+		param = parts[1]
+		if not param:
+			param = """"
+
+		string37461 = 'help'
+		string37461 += param
+		string37461 += 'snapes on a plane'
+		bar = string37461[4:-17]
+
+		import os
+		import code.backend.data.raw.owasp.helpers.utils
+
+		fileName = f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}'
+		if os.path.exists(fileName):
+			RESPONSE += ( f""File \'{escape_for_html(fileName)}\' exists."" )
+		else:
+			RESPONSE += ( f""File \'{escape_for_html(fileName)}\' does not exist."" )
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+70,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/cmdi-00/BenchmarkTest00350', methods=['GET'])
+	def BenchmarkTest00350_get():
+		return BenchmarkTest00350_post()
+
+	@app.route('/benchmark/cmdi-00/BenchmarkTest00350', methods=['POST'])
+	def BenchmarkTest00350_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		
+		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = wrapped.get_form_parameter(""BenchmarkTest00350"")
+		if not param:
+			param = """"
+
+		map11630 = {}
+		map11630['keyA-11630'] = 'a-Value'
+		map11630['keyB-11630'] = param
+		map11630['keyC'] = 'another-Value'
+		bar = ""safe!""
+		bar = map11630['keyB-11630']
+		bar = map11630['keyA-11630']
+
+		import platform
+		import subprocess
+		import code.backend.data.raw.owasp.helpers.utils
+
+		argStr = """"
+		if platform.system() == ""Windows"":
+			argStr = ""cmd.exe /c ""
+		else:
+			argStr = ""sh -c ""
+		argStr += f""echo {bar}""
+
+		try:
+			proc = subprocess.run(argStr, shell=True, capture_output=True, encoding=""utf-8"")
+
+			RESPONSE += (
+				code.backend.data.raw.owasp.helpers.utils.commandOutput(proc)
+			)
+		except IOError:
+			RESPONSE += (
+				""Problem executing cmdi - subprocess.run(list) Test Case""
+			)
+
+		return RESPONSE",SAFE,CWE-78,OWASP
+129,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest00620', methods=['GET'])
+	def BenchmarkTest00620_get():
+		return BenchmarkTest00620_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest00620', methods=['POST'])
+	def BenchmarkTest00620_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.utils
+		param = """"
+		
+		for name in request.headers.keys():
+			if name.lower() in code.backend.data.raw.owasp.helpers.utils.commonHeaderNames:
+				continue
+		
+			if request.headers.get_all(name):
+				param = name
+				break
+
+		import base64
+		tmp = base64.b64encode(param.encode('utf-8'))
+		bar = base64.b64decode(tmp).decode('utf-8')
+
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			fileName = f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}'
+			with open(fileName, 'wb') as fd:
+				RESPONSE += (
+					f'Now ready to write to file: {escape_for_html(fileName)}'
+				)
+		except IOError as e:
+			RESPONSE += (
+				f'Problem reading from file \'{escape_for_html(fileName)}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+
+		return RESPONSE",Insecure File Handling,CWE-22,OWASP
+306,"#!/usr/bin/env python3
+import cgi, cgitb
+cgitb.enable()
+
+form = cgi.FieldStorage()
+name = form.getvalue('name', 'World')
+
+print('Content-Type: text/html\n')
+print(f'<h1>Hello, {name}!</h1>')",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
+296,"table = request.args.get('table')
+id = request.args.get('id')
+cursor.execute(f""SELECT * FROM {table} WHERE admin_id = {id}"")",SQL Injection,CWE-89,Python_Vulnerability_Remediation
+146,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest00750', methods=['GET'])
+	def BenchmarkTest00750_get():
+		return BenchmarkTest00750_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest00750', methods=['POST'])
+	def BenchmarkTest00750_post():
+		RESPONSE = """"
+
+		values = request.args.getlist(""BenchmarkTest00750"")
+		param = """"
+		if values:
+			param = values[0]
+
+		map8238 = {}
+		map8238['keyA-8238'] = 'a-Value'
+		map8238['keyB-8238'] = param
+		map8238['keyC'] = 'another-Value'
+		bar = map8238['keyB-8238']
+
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			fileName = f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}'
+			with open(fileName, 'wb') as fd:
+				RESPONSE += (
+					f'Now ready to write to file: {escape_for_html(fileName)}'
+				)
+		except IOError as e:
+			RESPONSE += (
+				f'Problem reading from file \'{escape_for_html(fileName)}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+
+		return RESPONSE",Insecure File Handling,CWE-22,OWASP
+203,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01181', methods=['GET'])
+	def BenchmarkTest01181_get():
+		return BenchmarkTest01181_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01181', methods=['POST'])
+	def BenchmarkTest01181_post():
+		RESPONSE = """"
+
+		param = request.form.get(""BenchmarkTest01181"")
+		if not param:
+			param = """"
+
+
+		import os
+		import code.backend.data.raw.owasp.helpers.utils
+
+		fileName = f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{param}'
+		if os.path.exists(fileName):
+			RESPONSE += ( f""File \'{escape_for_html(fileName)}\' exists."" )
+		else:
+			RESPONSE += ( f""File \'{escape_for_html(fileName)}\' does not exist."" )
+
+		return RESPONSE",Insecure File Handling,CWE-22,OWASP
+341,"def template(name):
+    with open('/templates/' + name + '.html') as f:
+        return f.read()",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
+6,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00007', methods=['GET'])
+	def BenchmarkTest00007_get():
+		response = make_response(render_template('web/pathtraver-00/BenchmarkTest00007.html'))
+		response.set_cookie('BenchmarkTest00007', 'FileName',
+			max_age=60*3,
+			secure=True,
+			path=request.path,
+			domain='localhost')
+		return response
+		return BenchmarkTest00007_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00007', methods=['POST'])
+	def BenchmarkTest00007_post():
+		RESPONSE = """"
+
+		import urllib.parse
+		param = urllib.parse.unquote_plus(request.cookies.get(""BenchmarkTest00007"", ""noCookieValueSupplied""))
+
+		string22532 = 'help'
+		string22532 += param
+		string22532 += 'snapes on a plane'
+		bar = string22532[4:-17]
+
+		import code.backend.data.raw.owasp.helpers.utils
+
+		if '../' in bar:
+			RESPONSE += (
+				'File name must not contain \'../\''
+			)
+			return RESPONSE
+
+		try:
+			fileName = f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}'
+			fd = open(fileName, 'wb')
+			RESPONSE += (
+				f'Now ready to write to file: {escape_for_html(fileName)}'
+			)
+		except IOError as e:
+			RESPONSE += (
+				f'Problem reading from file \'{escape_for_html(fileName)}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+		finally:
+			try:
+				if fd is not None:
+					fd.close()
+			except IOError:
+				pass # ""// we tried...""
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+328,"import os
+
+def run_command(user_input):
+    command = ""ls "" + user_input
+    os.system(command)
+
+def run_eval(user_input):
+    eval(user_input)
+
+if __name__ == ""__main__"":
+    user_input = input(""Enter your command: "")
+    run_command(user_input)
+    run_eval(user_input)",Command Injection,CWE-78,Python_Vulnerability_Remediation
+31,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/cmdi-00/BenchmarkTest00166', methods=['GET'])
+	def BenchmarkTest00166_get():
+		return BenchmarkTest00166_post()
+
+	@app.route('/benchmark/cmdi-00/BenchmarkTest00166', methods=['POST'])
+	def BenchmarkTest00166_post():
+		RESPONSE = """"
+
+		param = request.form.get(""BenchmarkTest00166"")
+		if not param:
+			param = """"
+
+		map29039 = {}
+		map29039['keyA-29039'] = 'a-Value'
+		map29039['keyB-29039'] = param
+		map29039['keyC'] = 'another-Value'
+		bar = map29039['keyB-29039']
+
+		import platform
+		import subprocess
+		import code.backend.data.raw.owasp.helpers.utils
+
+		argStr = """"
+		if platform.system() == ""Windows"":
+			argStr = ""cmd.exe /c ""
+		else:
+			argStr = ""sh -c ""
+		argStr += f""echo {bar}""
+
+		try:
+			proc = subprocess.run(argStr, shell=True, capture_output=True, encoding=""utf-8"")
+
+			RESPONSE += (
+				code.backend.data.raw.owasp.helpers.utils.commandOutput(proc)
+			)
+		except IOError:
+			RESPONSE += (
+				""Problem executing cmdi - subprocess.run(list) Test Case""
+			)
+
+		return RESPONSE",Command Injection,CWE-78,OWASP
+316,"from fastapi import FastAPI, Query
+import aiomysql
+
+app = FastAPI()
+
+@app.get(""/comments"")
+async def get_comments(post_id: str = Query(...)):
+    conn = await aiomysql.connect(host='localhost', db='blog')
+    cur = await conn.cursor()
+    await cur.execute(""SELECT * FROM comments WHERE post_id = "" + post_id)
+    results = await cur.fetchall()
+    return results",SQL Injection,CWE-89,Python_Vulnerability_Remediation
+175,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01013', methods=['GET'])
+	def BenchmarkTest01013_get():
+		return BenchmarkTest01013_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01013', methods=['POST'])
+	def BenchmarkTest01013_post():
+		RESPONSE = """"
+
+		parts = request.path.split(""/"")
+		param = parts[1]
+		if not param:
+			param = """"
+
+		import code.backend.data.raw.owasp.helpers.ThingFactory
+		
+		thing = code.backend.data.raw.owasp.helpers.ThingFactory.createThing()
+		bar = thing.doSomething(param)
+
+		import pathlib
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			testfiles = pathlib.Path(code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR)
+			p = (testfiles / bar).resolve()
+
+			if not str(p).startswith(str(testfiles)):
+				RESPONSE += (
+					""Invalid Path.""
+				)
+				return RESPONSE
+
+			RESPONSE += (
+				f'The beginning of file: \'{escape_for_html(str(p))}\' is:\n\n'
+				f'{escape_for_html(p.read_text()[:1000])}'
+			)
+		except OSError:
+			RESPONSE += (
+				f'Problem reading from file \'{{escape_for_html(fileName)}}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+252,"from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    if username == 'root' and password == 'toor':
+        return {'status': 'success', 'role': 'superuser'}
+    return {'status': 'failed'}, 401",Hardcoded Credentials,CWE-798,Python_Vulnerability_Remediation
+391,"import os
+
+def export_note(uid, note):
+    with open(f'/notes/{uid}/{note}.txt', 'w') as f:
+        f.write(request.body)",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
+118,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00531', methods=['GET'])
+	def BenchmarkTest00531_get():
+		return BenchmarkTest00531_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00531', methods=['POST'])
+	def BenchmarkTest00531_post():
+		RESPONSE = """"
+
+		param = """"
+		headers = request.headers.getlist(""Referer"")
+		
+		if headers:
+			param = headers[0]
+
+		import configparser
+		
+		bar = 'safe!'
+		conf18258 = configparser.ConfigParser()
+		conf18258.add_section('section18258')
+		conf18258.set('section18258', 'keyA-18258', 'a-Value')
+		conf18258.set('section18258', 'keyB-18258', param)
+		bar = conf18258.get('section18258', 'keyB-18258')
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			f'bar is \'{bar}\' and otherarg is \'{otherarg}\''
+		)
+
+		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+335,"config_dir = '/etc/myapp/'
+
+def load_cfg(file):
+    return open(config_dir + file).read()",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
+304,"import subprocess
+
+def csv_to_json(csv_file):
+    return subprocess.check_output(f'csvjson {csv_file}', shell=True)",Command Injection,CWE-77,Python_Vulnerability_Remediation
+317,"import subprocess
+import json
+
+def process_data():
+    data = json.loads(input(""Enter JSON data: ""))
+    operation = data.get('operation')
+    target = data.get('target')
+    # Whitelist approach with argument list
+    if operation in ['compress', 'extract']:
+        if operation == 'compress':
+            subprocess.run(['tar', '-czf', f""{target}.tar.gz"", target], check=True)
+        else:
+            subprocess.run(['tar', '-xzf', target], check=True)
+    else:
+        print(""Invalid operation"")
+
+process_data()",Command Injection,CWE-78,Python_Vulnerability_Remediation
+277,"def check_password(input_password):
+    stored_password_hash = ""$2b$12$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"" # Example bcrypt hash
+    return input_password == ""P@$$wOrd"" # Intended vulnerable comparison, not actual hash checking.  Real vulnerability would be hardcoded password to check against, not hash.
+
+password_attempt = input(""Enter password: "")
+if check_password(password_attempt):
+    print(""Access granted"")
+else:
+    print(""Access denied"")",Hardcoded Credentials,CWE-798,Python_Vulnerability_Remediation
+373,"import requests
+
+class APIClient:
+    def __init__(self):
+        self.api_key = ""sk-1234567890abcdefghijklmnop""
+        self.base_url = ""https://api.service.com""
+    
+    def fetch_data(self):
+        headers = {""Authorization"": f""Bearer {self.api_key}""}
+        response = requests.get(f""{self.base_url}/data"", headers=headers)
+        return response.json()",Hardcoded Credentials,CWE-798,Python_Vulnerability_Remediation
+115,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00526', methods=['GET'])
+	def BenchmarkTest00526_get():
+		return BenchmarkTest00526_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00526', methods=['POST'])
+	def BenchmarkTest00526_post():
+		RESPONSE = """"
+
+		param = """"
+		headers = request.headers.getlist(""BenchmarkTest00526"")
+		
+		if headers:
+			param = headers[0]
+
+		import code.backend.data.raw.owasp.helpers.ThingFactory
+		
+		thing = code.backend.data.raw.owasp.helpers.ThingFactory.createThing()
+		bar = thing.doSomething(param)
+
+		import pathlib
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			testfiles = pathlib.Path(code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR)
+			p = testfiles / bar
+			RESPONSE += (
+				f'The beginning of file: \'{escape_for_html(str(p))}\' is:\n\n'
+				f'{escape_for_html(p.read_text()[:1000])}'
+			)
+		except OSError:
+			RESPONSE += (
+				f'Problem reading from file \'{{escape_for_html(fileName)}}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+
+		return RESPONSE",Insecure File Handling,CWE-22,OWASP
+152,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00830', methods=['GET'])
+	def BenchmarkTest00830_get():
+		return BenchmarkTest00830_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00830', methods=['POST'])
+	def BenchmarkTest00830_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		
+		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = wrapped.get_query_parameter(""BenchmarkTest00830"")
+		if not param:
+			param = """"
+
+		num = 106
+		
+		bar = ""This_should_always_happen"" if 7 * 18 + num > 200 else param
+
+
+		RESPONSE += (
+			f'Parameter value: {bar}'
+		)
+
+		return RESPONSE",SAFE,CWE-79,OWASP
+197,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01114', methods=['GET'])
+	def BenchmarkTest01114_get():
+		return BenchmarkTest01114_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01114', methods=['POST'])
+	def BenchmarkTest01114_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		scr = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = scr.get_safe_value(""BenchmarkTest01114"")
+
+		bar = ""alsosafe""
+		if param:
+			lst = []
+			lst.append('safe')
+			lst.append(param)
+			lst.append('moresafe')
+			lst.pop(0)
+			bar = lst[1]
+
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			fileName = f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}'
+			with open(fileName, 'wb') as fd:
+				RESPONSE += (
+					f'Now ready to write to file: {escape_for_html(fileName)}'
+				)
+		except IOError as e:
+			RESPONSE += (
+				f'Problem reading from file \'{escape_for_html(fileName)}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+307,"from flask import Flask, request, render_template_string
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    search_term = request.args.get('search', '')
+    template = f""<script>console.log('You searched for: {search_term}');</script><div>Search results for: {search_term}</div>""
+    return render_template_string(template)
+
+if __name__ == '__main__':
+    app.run(debug=False)",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
+342,"import sqlite3
+def fetch_user_data(username):
+    conn = sqlite3.connect('my_database.db')
+    cursor = conn.cursor()
+    query = ""SELECT * FROM users WHERE username='{}'"".format(username)
+    cursor.execute(query)
+    user_data = cursor.fetchone()
+    return user_data",SQL Injection,CWE-89,Python_Vulnerability_Remediation
+345,"import os
+
+def update_dns(domain, ip):
+    os.system(f'nsupdate -k key.conf <<EOF\nupdate add {domain} 60 A {ip}\nsend\nEOF')",Command Injection,CWE-77,Python_Vulnerability_Remediation
+235,"import sqlite3
+
+def get_order_by(sort_column):
+    conn = sqlite3.connect('orders.db')
+    cursor = conn.cursor()
+    query = ""SELECT * FROM orders ORDER BY "" + sort_column
+    cursor.execute(query)
+    results = cursor.fetchall()
+    conn.close()
+    return results
+
+sort_column = input(""Enter column to sort by: "")
+orders = get_order_by(sort_column)
+for order in orders:
+    print(order)",SQL Injection,CWE-89,Python_Vulnerability_Remediation
+314,"import os
+
+def run_command(user_input):
+    command = ""echo %s"" % user_input
+    os.system(command)
+
+def run_eval(user_input):
+    eval(user_input)
+
+while True:
+    user_input = input(""Enter your command: "")
+    try:
+        run_command(user_input)
+    except Exception as e:
+        print(""Error: "", e)
+        run_eval(user_input)",Command Injection,CWE-78,Python_Vulnerability_Remediation
+278,"import sqlite3
+
+def filter_users_by_role(role):
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    query = ""SELECT * FROM users WHERE role = '"" + role + ""'""
+    cursor.execute(query)
+    results = cursor.fetchall()
+    conn.close()
+    return results
+
+role = input(""Enter role to filter by: "")
+users = filter_users_by_role(role)
+for user in users:
+    print(user)",SQL Injection,CWE-89,Python_Vulnerability_Remediation
+172,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01010', methods=['GET'])
+	def BenchmarkTest01010_get():
+		return BenchmarkTest01010_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01010', methods=['POST'])
+	def BenchmarkTest01010_post():
+		RESPONSE = """"
+
+		parts = request.path.split(""/"")
+		param = parts[1]
+		if not param:
+			param = """"
+
+		import configparser
+		
+		bar = 'safe!'
+		conf4176 = configparser.ConfigParser()
+		conf4176.add_section('section4176')
+		conf4176.set('section4176', 'keyA-4176', 'a_Value')
+		conf4176.set('section4176', 'keyB-4176', param)
+		bar = conf4176.get('section4176', 'keyA-4176')
+
+		import pathlib
+		import code.backend.data.raw.owasp.helpers.utils
+
+		testfiles = pathlib.Path(code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR)
+		p = (testfiles / bar).resolve()
+
+		if not str(p).startswith(str(testfiles)):
+			RESPONSE += (
+				""Invalid Path.""
+			)
+			return RESPONSE
+		
+		if p.exists():
+			RESPONSE += ( f""File \'{escape_for_html(str(p))}\' exists."" )
+		else:
+			RESPONSE += ( f""File \'{escape_for_html(str(p))}\' does not exist."" )
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+174,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01012', methods=['GET'])
+	def BenchmarkTest01012_get():
+		return BenchmarkTest01012_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest01012', methods=['POST'])
+	def BenchmarkTest01012_post():
+		RESPONSE = """"
+
+		parts = request.path.split(""/"")
+		param = parts[1]
+		if not param:
+			param = """"
+
+		map72463 = {}
+		map72463['keyA-72463'] = 'a-Value'
+		map72463['keyB-72463'] = param
+		map72463['keyC'] = 'another-Value'
+		bar = ""safe!""
+		bar = map72463['keyB-72463']
+		bar = map72463['keyA-72463']
+
+		import pathlib
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			testfiles = pathlib.Path(code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR)
+			p = (testfiles / bar).resolve()
+
+			if not str(p).startswith(str(testfiles)):
+				RESPONSE += (
+					""Invalid Path.""
+				)
+				return RESPONSE
+
+			RESPONSE += (
+				f'The beginning of file: \'{escape_for_html(str(p))}\' is:\n\n'
+				f'{escape_for_html(p.read_text()[:1000])}'
+			)
+		except OSError:
+			RESPONSE += (
+				f'Problem reading from file \'{{escape_for_html(fileName)}}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+210,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-02/BenchmarkTest01214', methods=['GET'])
+	def BenchmarkTest01214_get():
+		return BenchmarkTest01214_post()
+
+	@app.route('/benchmark/pathtraver-02/BenchmarkTest01214', methods=['POST'])
+	def BenchmarkTest01214_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		
+		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = wrapped.get_query_parameter(""BenchmarkTest01214"")
+		if not param:
+			param = """"
+
+
+		import pathlib
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			testfiles = pathlib.Path(code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR)
+			p = testfiles / param
+			RESPONSE += (
+				f'The beginning of file: \'{escape_for_html(str(p))}\' is:\n\n'
+				f'{escape_for_html(p.read_text()[:1000])}'
+			)
+		except OSError:
+			RESPONSE += (
+				f'Problem reading from file \'{{escape_for_html(fileName)}}\': '
+				f'{escape_for_html(e.strerror)}'
+			)
+
+		return RESPONSE",Insecure File Handling,CWE-22,OWASP
+157,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00839', methods=['GET'])
+	def BenchmarkTest00839_get():
+		return BenchmarkTest00839_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00839', methods=['POST'])
+	def BenchmarkTest00839_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		
+		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = wrapped.get_query_parameter(""BenchmarkTest00839"")
+		if not param:
+			param = """"
+
+		import configparser
+		
+		bar = 'safe!'
+		conf3721 = configparser.ConfigParser()
+		conf3721.add_section('section3721')
+		conf3721.set('section3721', 'keyA-3721', 'a-Value')
+		conf3721.set('section3721', 'keyB-3721', param)
+		bar = conf3721.get('section3721', 'keyB-3721')
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			f'bar is \'{bar}\' and otherarg is \'{otherarg}\''
+		)
+
+		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+138,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest00739', methods=['GET'])
+	def BenchmarkTest00739_get():
+		return BenchmarkTest00739_post()
+
+	@app.route('/benchmark/pathtraver-01/BenchmarkTest00739', methods=['POST'])
+	def BenchmarkTest00739_post():
+		RESPONSE = """"
+
+		values = request.args.getlist(""BenchmarkTest00739"")
+		param = """"
+		if values:
+			param = values[0]
+
+		num = 106
+		
+		bar = ""This should never happen"" if (7*42) - num > 200 else param
+
+		import platform
+		import codecs
+		import code.backend.data.raw.owasp.helpers.utils
+		from urllib.parse import urlparse
+		from urllib.request import url2pathname
+
+		startURIslashes = """"
+
+		if platform.system() == ""Windows"":
+			startURIslashes = ""/""
+		else:
+			startURIslashes = ""//""
+
+		try:
+			fileURI = urlparse(""file:"" + startURIslashes + code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR.replace('\\', '/').replace(' ', '_') + bar)
+			fileTarget = codecs.open(f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}','r','utf-8')
+
+			RESPONSE += (
+				f""Access to file: \'{escape_for_html(fileTarget.name)}\' created.""
+			)
+
+			RESPONSE += (
+				"" And file already exists.""
+			)
+		except FileNotFoundError:
+			RESPONSE += (
+				"" But file doesn't exist yet.""
+			)
+		except IOError:
+			pass
+
+		return RESPONSE",Insecure File Handling,CWE-22,OWASP
+167,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest01003', methods=['GET'])
+	def BenchmarkTest01003_get():
+		return BenchmarkTest01003_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest01003', methods=['POST'])
+	def BenchmarkTest01003_post():
+		RESPONSE = """"
+
+		parts = request.path.split(""/"")
+		param = parts[1]
+		if not param:
+			param = """"
+
+		bar = ''
+		if param:
+			bar = param.split(' ')[0]
+
+
+		RESPONSE += (
+			f'Parameter value: {bar}'
+		)
+
+		return RESPONSE",SAFE,CWE-79,OWASP
+41,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00179', methods=['GET'])
+	def BenchmarkTest00179_get():
+		return BenchmarkTest00179_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00179', methods=['POST'])
+	def BenchmarkTest00179_post():
+		RESPONSE = """"
+
+		values = request.form.getlist(""BenchmarkTest00179"")
+		param = """"
+		if values:
+			param = values[0]
+
+		bar = ""alsosafe""
+		if param:
+			lst = []
+			lst.append('safe')
+			lst.append(param)
+			lst.append('moresafe')
+			lst.pop(0)
+			bar = lst[1]
+
+		import os
+		import code.backend.data.raw.owasp.helpers.utils
+
+		fileName = f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}'
+		if os.path.exists(fileName):
+			RESPONSE += ( f""File \'{escape_for_html(fileName)}\' exists."" )
+		else:
+			RESPONSE += ( f""File \'{escape_for_html(fileName)}\' does not exist."" )
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+228,"import os
+
+base_dir = ""safe_directory""
+os.makedirs(base_dir, exist_ok=True)
+with open(os.path.join(base_dir, ""safe_file.txt""), ""w"") as f:
+    f.write(""This is a safe file."")
+
+user_input = ""..\\..\\unsafe_file.txt""
+file_path = os.path.join(base_dir, user_input)
+try:
+    with open(file_path, ""r"") as f:
+        print(f.read())
+except FileNotFoundError:
+    print(""File not found."")",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
+11,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/sqli-00/BenchmarkTest00012', methods=['GET'])
+	def BenchmarkTest00012_get():
+		response = make_response(render_template('web/sqli-00/BenchmarkTest00012.html'))
+		response.set_cookie('BenchmarkTest00012', 'bar',
+			max_age=60*3,
+			secure=True,
+			path=request.path,
+			domain='localhost')
+		return response
+		return BenchmarkTest00012_post()
+
+	@app.route('/benchmark/sqli-00/BenchmarkTest00012', methods=['POST'])
+	def BenchmarkTest00012_post():
+		RESPONSE = """"
+
+		import urllib.parse
+		param = urllib.parse.unquote_plus(request.cookies.get(""BenchmarkTest00012"", ""noCookieValueSupplied""))
+
+		string93844 = 'help'
+		string93844 += param
+		string93844 += 'snapes on a plane'
+		bar = string93844[4:-17]
+
+		import code.backend.data.raw.owasp.helpers.db_sqlite
+
+		sql = f'SELECT username from USERS where password = ?'
+		con = code.backend.data.raw.owasp.helpers.db_sqlite.get_connection()
+		cur = con.cursor()
+		cur.execute(sql, (bar,))
+		RESPONSE += (
+			code.backend.data.raw.owasp.helpers.db_sqlite.results(cur, sql)
+		)
+		con.close()
+
+		return RESPONSE",SAFE,CWE-89,OWASP
+382,"import os
+
+def delete_user_file(fname):
+    os.system(f'rm /uploads/{fname}')",Command Injection,CWE-77,Python_Vulnerability_Remediation
+91,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00438', methods=['GET'])
+	def BenchmarkTest00438_get():
+		return BenchmarkTest00438_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00438', methods=['POST'])
+	def BenchmarkTest00438_post():
+		RESPONSE = """"
+
+		param = request.headers.get(""BenchmarkTest00438"")
+		if not param:
+		    param = """"
+
+		map69463 = {}
+		map69463['keyA-69463'] = 'a-Value'
+		map69463['keyB-69463'] = param
+		map69463['keyC'] = 'another-Value'
+		bar = map69463['keyB-69463']
+
+		import platform
+		import codecs
+		import code.backend.data.raw.owasp.helpers.utils
+		from urllib.parse import urlparse
+		from urllib.request import url2pathname
+
+		startURIslashes = """"
+
+		if platform.system() == ""Windows"":
+			startURIslashes = ""/""
+		else:
+			startURIslashes = ""//""
+
+		try:
+			fileURI = urlparse(""file:"" + startURIslashes + code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR.replace('\\', '/').replace(' ', '_') + bar)
+			fileTarget = codecs.open(f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}','r','utf-8')
+
+			RESPONSE += (
+				f""Access to file: \'{escape_for_html(fileTarget.name)}\' created.""
+			)
+
+			RESPONSE += (
+				"" And file already exists.""
+			)
+		except FileNotFoundError:
+			RESPONSE += (
+				"" But file doesn't exist yet.""
+			)
+		except IOError:
+			pass
+
+		return RESPONSE",Insecure File Handling,CWE-22,OWASP
+298,"import os
+import sys
+
+def execute_command(user_input):
+    command = 'ls ' + user_input
+    os.system(command)
+
+if __name__ == ""__main__"":
+    user_input = sys.argv[1]
+    execute_command(user_input)",Command Injection,CWE-78,Python_Vulnerability_Remediation
+279,"import subprocess
+
+def health_check(container):
+    return subprocess.run(f'docker inspect {container}', shell=True).returncode == 0",Command Injection,CWE-77,Python_Vulnerability_Remediation
+182,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest01020', methods=['GET'])
+	def BenchmarkTest01020_get():
+		return BenchmarkTest01020_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest01020', methods=['POST'])
+	def BenchmarkTest01020_post():
+		RESPONSE = """"
+
+		parts = request.path.split(""/"")
+		param = parts[1]
+		if not param:
+			param = """"
+
+		import html
+		
+		bar = html.escape(param)
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			'bar is \'%s\' and otherarg is \'%s\'' % (bar, otherarg)
+		)
+
+		return RESPONSE",SAFE,CWE-79,OWASP
+237,"import subprocess
+
+url = input()
+subprocess.run(['wget', url])",Command Injection,CWE-77,Python_Vulnerability_Remediation
+78,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00360', methods=['GET'])
+	def BenchmarkTest00360_get():
+		return BenchmarkTest00360_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00360', methods=['POST'])
+	def BenchmarkTest00360_post():
+		RESPONSE = """"
+
+		param = """"
+		for name in request.form.keys():
+			if ""BenchmarkTest00360"" in request.form.getlist(name):
+				param = name
+				break
+
+		num = 106
+		
+		bar = ""This_should_always_happen"" if 7 * 18 + num > 200 else param
+
+		import pathlib
+		import code.backend.data.raw.owasp.helpers.utils
+
+		testfiles = pathlib.Path(code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR)
+		p = testfiles / bar
+		if p.exists():
+			RESPONSE += ( f""File \'{escape_for_html(str(p))}\' exists."" )
+		else:
+			RESPONSE += ( f""File \'{escape_for_html(str(p))}\' does not exist."" )
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+222,"import subprocess
+
+user_input = input()
+subprocess.run(['ping', user_input])",Command Injection,CWE-77,Python_Vulnerability_Remediation
+34,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00170', methods=['GET'])
+	def BenchmarkTest00170_get():
+		return BenchmarkTest00170_post()
+
+	@app.route('/benchmark/pathtraver-00/BenchmarkTest00170', methods=['POST'])
+	def BenchmarkTest00170_post():
+		RESPONSE = """"
+
+		values = request.form.getlist(""BenchmarkTest00170"")
+		param = """"
+		if values:
+			param = values[0]
+
+		import configparser
+		
+		bar = 'safe!'
+		conf64047 = configparser.ConfigParser()
+		conf64047.add_section('section64047')
+		conf64047.set('section64047', 'keyA-64047', 'a_Value')
+		conf64047.set('section64047', 'keyB-64047', param)
+		bar = conf64047.get('section64047', 'keyA-64047')
+
+		import codecs
+		import code.backend.data.raw.owasp.helpers.utils
+
+		try:
+			fileTarget = codecs.open(f'{code.backend.data.raw.owasp.helpers.utils.TESTFILES_DIR}/{bar}','r','utf-8')
+
+			RESPONSE += (
+				f""Access to file: \'{escape_for_html(fileTarget.name)}\' created.""
+			)
+
+			RESPONSE += (
+				"" And file already exists.""
+			)
+
+		except FileNotFoundError:
+			RESPONSE += (
+				"" But file doesn't exist yet.""
+			)
+
+		return RESPONSE",SAFE,CWE-22,OWASP
+371,"import sqlite3
+
+def get_user_data(username):
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    query = ""SELECT * FROM users WHERE username = '"" + username + ""'""
+    cursor.execute(query)
+    return cursor.fetchall()",SQL Injection,CWE-89,Python_Vulnerability_Remediation

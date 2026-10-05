@@ -469,4 +469,7 @@ code/backend/venv/
 __pycache__/
 *.pyc
 .env
- 
+ code/backend/data/raw/
+
+# Raw datasets - kept locally, not committed
+/code/backend/data/raw/
