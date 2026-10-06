@@ -6,5 +6,5 @@ from .router import router
 
 
 def register_codeshield_ml(app: FastAPI) -> None:
-    """Register the ML routes without changing the host application's routes."""
+    """Register the CodeShield ML scan routes."""
     app.include_router(router)
