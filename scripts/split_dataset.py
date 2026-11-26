@@ -1,72 +1,58 @@
+
 import os
 import pandas as pd
-
 from sklearn.model_selection import train_test_split
 
-
-# ============================================================
-# PATHS
-# ============================================================
-
-PROJECT_ROOT = os.path.dirname(
-    os.path.dirname(
-        os.path.abspath(__file__)
-    )
-)
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DATASET_PATH = os.path.join(
-    PROJECT_ROOT,
-    "code",
-    "backend",
-    "data",
-    "processed",
+    ROOT, "code", "backend", "data", "processed",
     "codeshield_dataset.csv"
 )
 
 OUTPUT_DIR = os.path.join(
-    PROJECT_ROOT,
-    "code",
-    "backend",
-    "data",
-    "processed"
+    ROOT, "code", "backend", "data", "processed"
 )
 
-
-# ============================================================
-# LOAD DATASET
-# ============================================================
-
+# 1. Load original dataset
 df = pd.read_csv(DATASET_PATH)
 
-print("Original dataset:", df.shape)
+print("Original dataset:", len(df))
 
-print("\nOriginal class distribution:")
+# 2. Normalize code for duplicate detection
+df["normalized_code"] = (
+    df["code"].fillna("").astype(str).str.split().str.join(" ")
+)
+
+# 3. Check for conflicting labels before removing duplicates
+label_counts = df.groupby("normalized_code")["label"].nunique()
+conflicts = label_counts[label_counts > 1]
+
+if not conflicts.empty:
+    raise ValueError(
+        "Duplicate code samples have conflicting labels. "
+        "Resolve these manually before splitting."
+    )
+
+# 4. Remove normalized duplicates
+df = df.drop_duplicates(
+    subset=["normalized_code"],
+    keep="first"
+).copy()
+
+df = df.drop(columns=["normalized_code"])
+
+print("After deduplication:", len(df))
+print("\nClass distribution:")
 print(df["label"].value_counts())
 
-
-# ============================================================
-# FIRST SPLIT
-# 70% TRAIN
-# 30% TEMPORARY
-# ============================================================
-
+# 5. Split: 70% training, 15% validation, 15% testing
 train_df, temp_df = train_test_split(
     df,
     test_size=0.30,
     stratify=df["label"],
     random_state=42
 )
-
-
-# ============================================================
-# SECOND SPLIT
-# TEMPORARY → VALIDATION + TEST
-#
-# 50% / 50%
-# Therefore:
-# 15% validation
-# 15% test
-# ============================================================
 
 validation_df, test_df = train_test_split(
     temp_df,
@@ -75,75 +61,33 @@ validation_df, test_df = train_test_split(
     random_state=42
 )
 
-
-# ============================================================
-# SAVE
-# ============================================================
-
-train_path = os.path.join(
-    OUTPUT_DIR,
-    "train.csv"
-)
-
-validation_path = os.path.join(
-    OUTPUT_DIR,
-    "validation.csv"
-)
-
-test_path = os.path.join(
-    OUTPUT_DIR,
-    "test.csv"
-)
-
+# 6. Save splits
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 train_df.to_csv(
-    train_path,
-    index=False
+    os.path.join(OUTPUT_DIR, "train.csv"), index=False
 )
 
 validation_df.to_csv(
-    validation_path,
-    index=False
+    os.path.join(OUTPUT_DIR, "validation.csv"), index=False
 )
 
 test_df.to_csv(
-    test_path,
-    index=False
+    os.path.join(OUTPUT_DIR, "test.csv"), index=False
 )
 
+# 7. Report
+print("\n========== NEW SPLIT RESULTS ==========")
+print("Training:", len(train_df))
+print("Validation:", len(validation_df))
+print("Testing:", len(test_df))
 
-# ============================================================
-# REPORT
-# ============================================================
+for name, split in [
+    ("TRAIN", train_df),
+    ("VALIDATION", validation_df),
+    ("TEST", test_df)
+]:
+    print(f"\n{name} DISTRIBUTION")
+    print(split["label"].value_counts())
 
-print("\n========== SPLIT RESULTS ==========")
-
-print(
-    f"Training:   {len(train_df)} examples"
-)
-
-print(
-    f"Validation: {len(validation_df)} examples"
-)
-
-print(
-    f"Test:       {len(test_df)} examples"
-)
-
-
-print("\n========== TRAIN DISTRIBUTION ==========")
-print(train_df["label"].value_counts())
-
-
-print("\n========== VALIDATION DISTRIBUTION ==========")
-print(validation_df["label"].value_counts())
-
-
-print("\n========== TEST DISTRIBUTION ==========")
-print(test_df["label"].value_counts())
-
-
-print("\nFiles saved:")
-print(train_path)
-print(validation_path)
-print(test_path)
+print("\nNew splits saved successfully.")

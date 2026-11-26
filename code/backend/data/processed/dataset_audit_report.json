@@ -1,0 +1,58 @@
+{
+  "dataset": {
+    "rows": 399,
+    "class_distribution": {
+      "Insecure File Handling": 73,
+      "SAFE": 130,
+      "Cross-Site Scripting": 48,
+      "SQL Injection": 45,
+      "Command Injection": 85,
+      "Hardcoded Credentials": 18
+    },
+    "missing_code": 0,
+    "missing_label": 0,
+    "duplicate_code_rows": 1
+  },
+  "train": {
+    "rows": 278,
+    "class_distribution": {
+      "Cross-Site Scripting": 33,
+      "SAFE": 91,
+      "SQL Injection": 31,
+      "Hardcoded Credentials": 13,
+      "Insecure File Handling": 51,
+      "Command Injection": 59
+    },
+    "missing_code": 0,
+    "missing_label": 0,
+    "duplicate_code_rows": 0
+  },
+  "validation": {
+    "rows": 60,
+    "class_distribution": {
+      "Cross-Site Scripting": 8,
+      "SAFE": 20,
+      "Command Injection": 12,
+      "SQL Injection": 7,
+      "Insecure File Handling": 11,
+      "Hardcoded Credentials": 2
+    },
+    "missing_code": 0,
+    "missing_label": 0,
+    "duplicate_code_rows": 0
+  },
+  "test": {
+    "rows": 60,
+    "class_distribution": {
+      "Cross-Site Scripting": 7,
+      "SQL Injection": 7,
+      "Command Injection": 13,
+      "SAFE": 19,
+      "Insecure File Handling": 11,
+      "Hardcoded Credentials": 3
+    },
+    "missing_code": 0,
+    "missing_label": 0,
+    "duplicate_code_rows": 0
+  }
+}

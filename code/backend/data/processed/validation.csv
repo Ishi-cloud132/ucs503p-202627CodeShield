@@ -1,54 +1,14 @@
 id,code,label,cwe,source
-62,"'''
-OWASP Benchmark for Python v0.1
-
-This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
-For details, please see https://owasp.org/www-project-benchmark.
-
-The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation, version 3.
-
-The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the GNU General Public License for more details.
-
-  Author: Theo Cartsonis
-  Created: 2025
-'''
-
-from flask import redirect, url_for, request, make_response, render_template
-from code.backend.data.raw.owasp.helpers.utils import escape_for_html
-
-def init(app):
-
-	@app.route('/benchmark/xss-00/BenchmarkTest00281', methods=['GET'])
-	def BenchmarkTest00281_get():
-		return BenchmarkTest00281_post()
-
-	@app.route('/benchmark/xss-00/BenchmarkTest00281', methods=['POST'])
-	def BenchmarkTest00281_post():
-		RESPONSE = """"
-
-		import code.backend.data.raw.owasp.helpers.separate_request
-		
-		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
-		param = wrapped.get_form_parameter(""BenchmarkTest00281"")
-		if not param:
-			param = """"
-
-		bar = ""This should never happen""
-		if 'should' in bar:
-			bar = param
-
-
-		dict = {}
-		dict['bar'] = bar
-		dict['otherarg'] = 'this is it'
-		RESPONSE += (
-			'bar is \'{0[bar]}\' and otherarg is \'{0[otherarg]}\''.format(dict)
-		)
-
-		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+290,"def generate_error_page(error_message):
+    page = '''
+    <html>
+        <body>
+            <h1>Error Occurred</h1>
+            <p>''' + error_message + '''</p>
+        </body>
+    </html>
+    '''
+    return page",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
 113,"'''
 OWASP Benchmark for Python v0.1
 
@@ -108,19 +68,18 @@ def init(app):
 			RESPONSE += ( f""File \'{escape_for_html(str(p))}\' does not exist."" )
 
 		return RESPONSE",SAFE,CWE-22,OWASP
-390,"import os
-from flask import Flask, request
+389,"import os
+import glob
 
-app = Flask(__name__)
+def find_files():
+    pattern = input(""Enter file pattern (e.g., *.txt): "")
+    # Use Python's glob instead of shell find command
+    files = glob.glob(pattern, recursive=True)
+    for file in files:
+        print(file)
 
-@app.route('/cmd', methods=['POST'])
-def cmd():
-    data = request.form.get('data')
-    os.system(data)
-
-if __name__ == '__main__':
-    app.run()",Command Injection,CWE-77,Python_Vulnerability_Remediation
-103,"'''
+find_files()",Command Injection,CWE-78,Python_Vulnerability_Remediation
+83,"'''
 OWASP Benchmark for Python v0.1
 
 This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
@@ -142,26 +101,32 @@ from code.backend.data.raw.owasp.helpers.utils import escape_for_html
 
 def init(app):
 
-	@app.route('/benchmark/xss-00/BenchmarkTest00453', methods=['GET'])
-	def BenchmarkTest00453_get():
-		return BenchmarkTest00453_post()
+	@app.route('/benchmark/xss-00/BenchmarkTest00365', methods=['GET'])
+	def BenchmarkTest00365_get():
+		return BenchmarkTest00365_post()
 
-	@app.route('/benchmark/xss-00/BenchmarkTest00453', methods=['POST'])
-	def BenchmarkTest00453_post():
+	@app.route('/benchmark/xss-00/BenchmarkTest00365', methods=['POST'])
+	def BenchmarkTest00365_post():
 		RESPONSE = """"
 
-		param = request.headers.get(""Referer"")
-		if not param:
-		    param = """"
+		param = """"
+		for name in request.form.keys():
+			if ""BenchmarkTest00365"" in request.form.getlist(name):
+				param = name
+				break
 
-		import base64
-		tmp = base64.b64encode(param.encode('utf-8'))
-		bar = base64.b64decode(tmp).decode('utf-8')
+		TestParam = ""This should never happen""
+		if 'should' not in TestParam:
+			bar = ""Ifnot case passed""
+		else:
+			bar = param
 
 
-		otherarg = ""static text""
+		dict = {}
+		dict['bar'] = bar
+		dict['otherarg'] = 'this is it'
 		RESPONSE += (
-			'bar is \'%s\' and otherarg is \'%s\'' % (bar, otherarg)
+			'bar is \'{0[bar]}\' and otherarg is \'{0[otherarg]}\''.format(dict)
 		)
 
 		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
@@ -211,10 +176,10 @@ def init(app):
 		)
 
 		return RESPONSE",SAFE,CWE-79,OWASP
-236,"import subprocess
+279,"import subprocess
 
-url = input()
-subprocess.run(['curl', url])",Command Injection,CWE-77,Python_Vulnerability_Remediation
+def health_check(container):
+    return subprocess.run(f'docker inspect {container}', shell=True).returncode == 0",Command Injection,CWE-77,Python_Vulnerability_Remediation
 282,"from bottle import route, request
 import sqlite3
 
@@ -274,52 +239,17 @@ def init(app):
 		)
 
 		return RESPONSE",SAFE,CWE-79,OWASP
-59,"'''
-OWASP Benchmark for Python v0.1
+343,"from flask import Flask, request, render_template_string
 
-This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
-For details, please see https://owasp.org/www-project-benchmark.
+app = Flask(__name__)
 
-The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation, version 3.
+@app.route('/')
+def home():
+    name = request.args.get('name', '')
+    return render_template_string('Hello, %s!' % name)
 
-The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the GNU General Public License for more details.
-
-  Author: Theo Cartsonis
-  Created: 2025
-'''
-
-from flask import redirect, url_for, request, make_response, render_template
-from code.backend.data.raw.owasp.helpers.utils import escape_for_html
-
-def init(app):
-
-	@app.route('/benchmark/xss-00/BenchmarkTest00278', methods=['GET'])
-	def BenchmarkTest00278_get():
-		return BenchmarkTest00278_post()
-
-	@app.route('/benchmark/xss-00/BenchmarkTest00278', methods=['POST'])
-	def BenchmarkTest00278_post():
-		RESPONSE = """"
-
-		import code.backend.data.raw.owasp.helpers.separate_request
-		
-		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
-		param = wrapped.get_form_parameter(""BenchmarkTest00278"")
-		if not param:
-			param = """"
-
-		bar = param + '_SafeStuff'
-
-
-		otherarg = ""static text""
-		RESPONSE += (
-			f'bar is \'{bar}\' and otherarg is \'{otherarg}\''
-		)
-
-		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+if __name__ == ""__main__"":
+    app.run(debug=True)",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
 398,"def log_reader(name):
     with open(f'/var/log/{name}.log') as f:
         return f.read()",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
@@ -330,10 +260,10 @@ password = ""password123""
 
 response = requests.post(""https://example.com/login"", data={""username"": username, ""password"": password})
 print(response.status_code)",Hardcoded Credentials,CWE-798,Python_Vulnerability_Remediation
-243,"import subprocess
+236,"import subprocess
 
-def convert_image(file_name, width, height):
-    subprocess.call(f'convert {file_name} -resize {width}x{height} out.jpg', shell=True)",Command Injection,CWE-77,Python_Vulnerability_Remediation
+url = input()
+subprocess.run(['curl', url])",Command Injection,CWE-77,Python_Vulnerability_Remediation
 359,"import sqlite3
 
 def search_articles(keyword):
@@ -463,20 +393,16 @@ def init(app):
 		return RESPONSE",SAFE,CWE-79,OWASP
 348,"def move_upload(uid, fname, dest):
     os.rename(f'/tmp/{uid}/{fname}', f'/uploads/{uid}/{dest}')",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
-369,"import os
+304,"import subprocess
 
-def git_checkout(branch):
-    os.system(f'git checkout {branch}')",Command Injection,CWE-77,Python_Vulnerability_Remediation
-251,"import subprocess
-import pickle
-
-def load_config():
-    serialized = input(""Enter serialized configuration: "")
-    # Dangerous: unpickling user input
-    config = pickle.loads(serialized.encode())
-    subprocess.run(config['command'], shell=True)
-
-load_config()",Command Injection,CWE-78,Python_Vulnerability_Remediation
+def csv_to_json(csv_file):
+    return subprocess.check_output(f'csvjson {csv_file}', shell=True)",Command Injection,CWE-77,Python_Vulnerability_Remediation
+374,"import os
+def execute_user_command():
+    user_input = input(""Enter your command: "")
+    os.system(user_input)
+    
+execute_user_command()",Command Injection,CWE-78,Python_Vulnerability_Remediation
 234,"import tarfile
 
 def untar(tar_path, dest):
@@ -510,13 +436,19 @@ create_file(filename, ""This is sensitive information."")
 
 user_input = input(""Enter filename to delete: "")
 delete_file(user_input)",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
-325,"import os
+241,"import os
+from flask import Flask, request
 
-def vulnerable_function(user_input):
-    command = ""echo %s > /dev/null"" % (user_input)
-    os.system(command)
+app = Flask(__name__)
 
-vulnerable_function(""This is a test"")",Command Injection,CWE-78,Python_Vulnerability_Remediation
+@app.route('/execute', methods=['POST'])
+def execute_command():
+    command = request.form.get('command')
+    os.system(command)  # This line is vulnerable to command injection attacks
+    return 'Command executed'
+
+if __name__ == '__main__':
+    app.run(debug=True)",Command Injection,CWE-78,Python_Vulnerability_Remediation
 111,"'''
 OWASP Benchmark for Python v0.1
 
@@ -753,85 +685,6 @@ def init(app):
 		)
 
 		return RESPONSE",SAFE,CWE-79,OWASP
-286,"import subprocess
-import configparser
-
-def deploy_service():
-    config = configparser.ConfigParser()
-    config.read('deployment.conf')
-    service_name = config.get('deployment', 'service')
-    # Validate service name is alphanumeric
-    if service_name.replace('-', '').replace('_', '').isalnum():
-        subprocess.run(['systemctl', 'restart', service_name], check=True)
-    else:
-        print(""Invalid service name"")
-
-deploy_service()",Command Injection,CWE-78,Python_Vulnerability_Remediation
-362,"def download_backup(filename):
-    path = '/backups/' + filename
-    return open(path, 'rb').read()",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
-343,"from flask import Flask, request, render_template_string
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    name = request.args.get('name', '')
-    return render_template_string('Hello, %s!' % name)
-
-if __name__ == ""__main__"":
-    app.run(debug=True)",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
-83,"'''
-OWASP Benchmark for Python v0.1
-
-This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
-For details, please see https://owasp.org/www-project-benchmark.
-
-The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License as published by the Free Software Foundation, version 3.
-
-The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the GNU General Public License for more details.
-
-  Author: Theo Cartsonis
-  Created: 2025
-'''
-
-from flask import redirect, url_for, request, make_response, render_template
-from code.backend.data.raw.owasp.helpers.utils import escape_for_html
-
-def init(app):
-
-	@app.route('/benchmark/xss-00/BenchmarkTest00365', methods=['GET'])
-	def BenchmarkTest00365_get():
-		return BenchmarkTest00365_post()
-
-	@app.route('/benchmark/xss-00/BenchmarkTest00365', methods=['POST'])
-	def BenchmarkTest00365_post():
-		RESPONSE = """"
-
-		param = """"
-		for name in request.form.keys():
-			if ""BenchmarkTest00365"" in request.form.getlist(name):
-				param = name
-				break
-
-		TestParam = ""This should never happen""
-		if 'should' not in TestParam:
-			bar = ""Ifnot case passed""
-		else:
-			bar = param
-
-
-		dict = {}
-		dict['bar'] = bar
-		dict['otherarg'] = 'this is it'
-		RESPONSE += (
-			'bar is \'{0[bar]}\' and otherarg is \'{0[otherarg]}\''.format(dict)
-		)
-
-		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
 32,"'''
 OWASP Benchmark for Python v0.1
 
@@ -895,6 +748,76 @@ def init(app):
 			)
 
 		return RESPONSE",Command Injection,CWE-78,OWASP
+362,"def download_backup(filename):
+    path = '/backups/' + filename
+    return open(path, 'rb').read()",Insecure File Handling,CWE-22,Python_Vulnerability_Remediation
+363,"from flask import Flask, request
+app = Flask(__name__)
+
+@app.route('/echo', methods=['POST'])
+def echo():
+    data = request.form['data']
+    return f""Echo: {data}""
+
+if __name__ == '__main__':
+    app.run(port=8000)",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
+24,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00097', methods=['GET'])
+	def BenchmarkTest00097_get():
+		return BenchmarkTest00097_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00097', methods=['POST'])
+	def BenchmarkTest00097_post():
+		RESPONSE = """"
+
+		param = request.form.get(""BenchmarkTest00097"")
+		if not param:
+			param = """"
+
+		bar = ''
+		if param:
+			bar = param.split(' ')[0]
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			f'bar is \'{bar}\' and otherarg is \'{otherarg}\''
+		)
+
+		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+347,"import os
+import sys
+
+def vulnerable_function():
+    try:
+        user_input = input(""Enter your command: "")
+        os.system(user_input)
+    except Exception as e:
+        print(""An error occurred: "", e)
+
+if __name__ == ""__main__"":
+    vulnerable_function()",Command Injection,CWE-78,Python_Vulnerability_Remediation
 37,"'''
 OWASP Benchmark for Python v0.1
 
@@ -967,12 +890,55 @@ def init(app):
 			pass
 
 		return RESPONSE",Insecure File Handling,CWE-22,OWASP
-374,"import os
-def execute_user_command():
-    user_input = input(""Enter your command: "")
-    os.system(user_input)
-    
-execute_user_command()",Command Injection,CWE-78,Python_Vulnerability_Remediation
+54,"'''
+OWASP Benchmark for Python v0.1
+
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
+
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00272', methods=['GET'])
+	def BenchmarkTest00272_get():
+		return BenchmarkTest00272_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00272', methods=['POST'])
+	def BenchmarkTest00272_post():
+		RESPONSE = """"
+
+		import code.backend.data.raw.owasp.helpers.separate_request
+		
+		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
+		param = wrapped.get_form_parameter(""BenchmarkTest00272"")
+		if not param:
+			param = """"
+
+		TestParam = ""This should never happen""
+		if 'should' not in TestParam:
+			bar = ""Ifnot case passed""
+		else:
+			bar = param
+
+
+		RESPONSE += (
+			f'Parameter value: {bar}'
+		)
+
+		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
 202,"'''
 OWASP Benchmark for Python v0.1
 
@@ -1086,25 +1052,61 @@ def init(app):
 		
 
 		return RESPONSE",SAFE,CWE-79,OWASP
-233,"from flask import Flask, request, render_template_string
+103,"'''
+OWASP Benchmark for Python v0.1
 
-app = Flask(__name__)
+This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
+For details, please see https://owasp.org/www-project-benchmark.
 
-@app.errorhandler(404)
-def page_not_found(e):
-    path = request.path
-    tmpl = f'''
-    <html>
-      <body>
-        <h2>404 — Not Found</h2>
-        <p>The path {path} could not be found.</p>
-      </body>
-    </html>'''
-    return render_template_string(tmpl), 404",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
-377,"import os
+The OWASP Benchmark is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, version 3.
 
-dirname = input()
-os.system('mkdir ' + dirname)",Command Injection,CWE-77,Python_Vulnerability_Remediation
+The OWASP Benchmark is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more details.
+
+  Author: Theo Cartsonis
+  Created: 2025
+'''
+
+from flask import redirect, url_for, request, make_response, render_template
+from code.backend.data.raw.owasp.helpers.utils import escape_for_html
+
+def init(app):
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00453', methods=['GET'])
+	def BenchmarkTest00453_get():
+		return BenchmarkTest00453_post()
+
+	@app.route('/benchmark/xss-00/BenchmarkTest00453', methods=['POST'])
+	def BenchmarkTest00453_post():
+		RESPONSE = """"
+
+		param = request.headers.get(""Referer"")
+		if not param:
+		    param = """"
+
+		import base64
+		tmp = base64.b64encode(param.encode('utf-8'))
+		bar = base64.b64decode(tmp).decode('utf-8')
+
+
+		otherarg = ""static text""
+		RESPONSE += (
+			'bar is \'%s\' and otherarg is \'%s\'' % (bar, otherarg)
+		)
+
+		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+298,"import os
+import sys
+
+def execute_command(user_input):
+    command = 'ls ' + user_input
+    os.system(command)
+
+if __name__ == ""__main__"":
+    user_input = sys.argv[1]
+    execute_command(user_input)",Command Injection,CWE-78,Python_Vulnerability_Remediation
 168,"'''
 OWASP Benchmark for Python v0.1
 
@@ -1343,13 +1345,10 @@ def init(app):
 			)
 
 		return RESPONSE",Insecure File Handling,CWE-22,OWASP
-388,"import os
+382,"import os
 
-filename = input()
-with open(filename, 'w') as f:
-    f.write('<?php echo shell_exec($_GET[""cmd""]); ?>')
-
-print(f""File saved as {filename}"")",Command Injection,CWE-78,Python_Vulnerability_Remediation
+def delete_user_file(fname):
+    os.system(f'rm /uploads/{fname}')",Command Injection,CWE-77,Python_Vulnerability_Remediation
 213,"'''
 OWASP Benchmark for Python v0.1
 
@@ -1393,20 +1392,7 @@ def init(app):
 		)
 
 		return RESPONSE",SAFE,CWE-79,OWASP
-241,"import os
-from flask import Flask, request
-
-app = Flask(__name__)
-
-@app.route('/execute', methods=['POST'])
-def execute_command():
-    command = request.form.get('command')
-    os.system(command)  # This line is vulnerable to command injection attacks
-    return 'Command executed'
-
-if __name__ == '__main__':
-    app.run(debug=True)",Command Injection,CWE-78,Python_Vulnerability_Remediation
-54,"'''
+31,"'''
 OWASP Benchmark for Python v0.1
 
 This file is part of the Open Web Application Security Project (OWASP) Benchmark Project.
@@ -1428,33 +1414,62 @@ from code.backend.data.raw.owasp.helpers.utils import escape_for_html
 
 def init(app):
 
-	@app.route('/benchmark/xss-00/BenchmarkTest00272', methods=['GET'])
-	def BenchmarkTest00272_get():
-		return BenchmarkTest00272_post()
+	@app.route('/benchmark/cmdi-00/BenchmarkTest00166', methods=['GET'])
+	def BenchmarkTest00166_get():
+		return BenchmarkTest00166_post()
 
-	@app.route('/benchmark/xss-00/BenchmarkTest00272', methods=['POST'])
-	def BenchmarkTest00272_post():
+	@app.route('/benchmark/cmdi-00/BenchmarkTest00166', methods=['POST'])
+	def BenchmarkTest00166_post():
 		RESPONSE = """"
 
-		import code.backend.data.raw.owasp.helpers.separate_request
-		
-		wrapped = code.backend.data.raw.owasp.helpers.separate_request.request_wrapper(request)
-		param = wrapped.get_form_parameter(""BenchmarkTest00272"")
+		param = request.form.get(""BenchmarkTest00166"")
 		if not param:
 			param = """"
 
-		TestParam = ""This should never happen""
-		if 'should' not in TestParam:
-			bar = ""Ifnot case passed""
+		map29039 = {}
+		map29039['keyA-29039'] = 'a-Value'
+		map29039['keyB-29039'] = param
+		map29039['keyC'] = 'another-Value'
+		bar = map29039['keyB-29039']
+
+		import platform
+		import subprocess
+		import code.backend.data.raw.owasp.helpers.utils
+
+		argStr = """"
+		if platform.system() == ""Windows"":
+			argStr = ""cmd.exe /c ""
 		else:
-			bar = param
+			argStr = ""sh -c ""
+		argStr += f""echo {bar}""
 
+		try:
+			proc = subprocess.run(argStr, shell=True, capture_output=True, encoding=""utf-8"")
 
-		RESPONSE += (
-			f'Parameter value: {bar}'
-		)
+			RESPONSE += (
+				code.backend.data.raw.owasp.helpers.utils.commandOutput(proc)
+			)
+		except IOError:
+			RESPONSE += (
+				""Problem executing cmdi - subprocess.run(list) Test Case""
+			)
 
-		return RESPONSE",Cross-Site Scripting,CWE-79,OWASP
+		return RESPONSE",Command Injection,CWE-78,OWASP
+233,"from flask import Flask, request, render_template_string
+
+app = Flask(__name__)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    path = request.path
+    tmpl = f'''
+    <html>
+      <body>
+        <h2>404 — Not Found</h2>
+        <p>The path {path} could not be found.</p>
+      </body>
+    </html>'''
+    return render_template_string(tmpl), 404",Cross-Site Scripting,CWE-79,Python_Vulnerability_Remediation
 5,"'''
 OWASP Benchmark for Python v0.1
 
@@ -1610,14 +1625,13 @@ def init(app):
 		con.close()
 
 		return RESPONSE",SAFE,CWE-89,OWASP
-271,"import os
+388,"import os
 
-def process_log():
-    log_file = os.environ.get('LOG_FILE', '/tmp/app.log')
-    # User controls LOG_FILE environment variable
-    os.system(f""cat {log_file} | grep ERROR"")
+filename = input()
+with open(filename, 'w') as f:
+    f.write('<?php echo shell_exec($_GET[""cmd""]); ?>')
 
-process_log()",Command Injection,CWE-78,Python_Vulnerability_Remediation
+print(f""File saved as {filename}"")",Command Injection,CWE-78,Python_Vulnerability_Remediation
 65,"'''
 OWASP Benchmark for Python v0.1
 
