@@ -1,0 +1,31 @@
+{
+  "model": "TF-IDF-only baseline",
+  "features": "TF-IDF unigram and bigram",
+  "classifier": "Calibrated Linear SVM",
+  "classifier_parameters": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "max_iter": 20000,
+    "calibration": "sigmoid",
+    "cv": 3
+  },
+  "split_counts": {
+    "train": 278,
+    "validation": 60,
+    "test": 60,
+    "final_training": 338
+  },
+  "validation": {
+    "accuracy": 0.8166666666666667,
+    "macro_precision": 0.8824404761904763,
+    "macro_recall": 0.8412698412698414,
+    "macro_f1": 0.8512065095398428
+  },
+  "test": {
+    "accuracy": 0.8333333333333334,
+    "macro_precision": 0.8882575757575758,
+    "macro_recall": 0.8012455380876434,
+    "macro_f1": 0.8280610987928062
+  },
+  "limitations": "Small dataset; not validated for production security decisions."
+}

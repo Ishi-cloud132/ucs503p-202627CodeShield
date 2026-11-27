@@ -219,6 +219,7 @@ def main():
             estimator=LinearSVC(
                 C=1.0,
                 class_weight="balanced",
+                max_iter=20000,
             ),
             method="sigmoid",
             cv=3,

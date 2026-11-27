@@ -1,0 +1,7 @@
+,Command Injection,Cross-Site Scripting,Hardcoded Credentials,Insecure File Handling,SAFE,SQL Injection
+Command Injection,13,0,0,0,0,0
+Cross-Site Scripting,0,4,0,0,3,0
+Hardcoded Credentials,0,0,2,0,0,1
+Insecure File Handling,0,0,0,8,3,0
+SAFE,0,0,0,3,16,0
+SQL Injection,0,0,0,0,0,7
